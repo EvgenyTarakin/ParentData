@@ -14,13 +14,23 @@ enum TypeCell {
     case child
 }
 
+// MARK: - protocol
+
+protocol DataCellDelegate: AnyObject {
+    func didSelectDeleteButton(for index: Int)
+}
+
 final class DataCell: UITableViewCell {
     
     // MARK: - property
     
     static let reuseIdentifier = String(describing: DataCell.self)
     
+    weak var delegate: DataCellDelegate?
+    
     // MARK: - private property
+    
+    private var index = 0
     
     private lazy var mainStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [textFieldStackView, deleteBackView])
@@ -104,10 +114,11 @@ final class DataCell: UITableViewCell {
 // MARK: - func
 
 extension DataCell {
-    func configurate(type: TypeCell) {
+    func configurate(type: TypeCell, index: Int) {
         if type == .person {
             deleteBackView.isHidden = true
         }
+        self.index = index
     }
 }
 
@@ -133,6 +144,6 @@ private extension DataCell {
 
 @objc private extension DataCell {
     func deleteCell() {
-        
+        delegate?.didSelectDeleteButton(for: index)
     }
 }

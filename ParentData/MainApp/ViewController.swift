@@ -43,6 +43,13 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         commonInit()
+        registerForKeyboardNotifications()
+    }
+    
+    // MARK: - deinit
+    
+    deinit {
+        removeKeyboardNotifications()
     }
 
 }
@@ -68,11 +75,34 @@ private extension ViewController {
             tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor)
         ])
     }
+    
+    func registerForKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(showKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(hideKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func removeKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
 }
 
 // MARK: - obj-c
 
 @objc private extension ViewController {
+    func showKeyboard(_ sender: Notification) {
+        if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            var inset = tableView.contentInset
+            inset.bottom = keyboardSize.height
+            tableView.contentInset.bottom = inset.bottom - 72
+        }
+    }
+    
+    func hideKeyboard() {
+        view.endEditing(true)
+        tableView.contentInset = .zero
+    }
+    
     func addChildCell() {
         
     }
@@ -164,11 +194,20 @@ extension ViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DataCell.reuseIdentifier, for: indexPath) as? DataCell
         else { return UITableViewCell() }
         if indexPath.section == 0 {
-            cell.configurate(type: .person)
+            cell.configurate(type: .person, index: indexPath.row)
         } else {
-            cell.configurate(type: .child)
+            cell.configurate(type: .child, index: indexPath.row)
         }
+        cell.delegate = self
         
         return cell
+    }
+}
+
+// MARK: - DataCellDelegate
+
+extension ViewController: DataCellDelegate {
+    func didSelectDeleteButton(for index: Int) {
+           
     }
 }
