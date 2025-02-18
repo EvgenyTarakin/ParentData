@@ -161,6 +161,7 @@ extension ViewController: UITableViewDelegate {
         headerButton.setTitle(" Добавить ребенка", for: .normal)
         headerButton.setImage(UIImage(systemName: "plus"), for: .normal)
         headerButton.addTarget(self, action: #selector(addChildCell), for: .touchUpInside)
+        headerButton.isHidden = childrenData.count == 5 ? true : false
         
         let stackView = UIStackView(arrangedSubviews: [titleLabel, headerButton])
         stackView.axis = .horizontal
