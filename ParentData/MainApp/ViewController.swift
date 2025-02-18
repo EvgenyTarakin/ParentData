@@ -78,6 +78,19 @@ private extension ViewController {
     }
     
     func tapDeleteAllButton() {
+        let alert = UIAlertController(title: "Вы действительно хотите cбросить все данные?",
+                                      message: nil,
+                                      preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Сбросить данные",
+                                      style: .destructive,
+                                      handler: deleteAllData))
+        alert.addAction(UIAlertAction(title: "Отмена",
+                                      style: .cancel))
+        
+        present(alert, animated: true)
+    }
+    
+    func deleteAllData(_ alert: UIAlertAction) {
         
     }
 }
