@@ -7,6 +7,12 @@
 
 import UIKit
 
+// MARK: - TextFieldDelegate
+
+protocol TextFieldDelegate: AnyObject {
+    func textFieldDidChange(type: TypeTextField, text: String)
+}
+
 // MARK: - TypeTextField
 
 enum TypeTextField {
@@ -23,6 +29,12 @@ enum TypeTextField {
 
 final class TextField: UIView {
     
+    // MARK: - property
+    
+    weak var delegate: TextFieldDelegate?
+    
+    private var type: TypeTextField = .name
+    
     // MARK: - private property
     
     private lazy var stackView: UIStackView = {
@@ -38,7 +50,6 @@ final class TextField: UIView {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "test"
         label.textColor = .gray
         label.font = .systemFont(ofSize: 14)
         
@@ -75,10 +86,15 @@ final class TextField: UIView {
 
 extension TextField {
     func configurate(type: TypeTextField) {
+        self.type = type
         titleLabel.text = type.title
         if type == .age {
             textField.keyboardType = .numberPad
         }
+    }
+    
+    func setValue(_ value: String) {
+        textField.text = value
     }
 }
 
@@ -107,6 +123,16 @@ private extension TextField {
 extension TextField: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        
+        return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        var text = (textField.text ?? "") + string
+        if string.isEmpty {
+            text.removeLast()
+        }
+        delegate?.textFieldDidChange(type: type, text: text)
         
         return true
     }

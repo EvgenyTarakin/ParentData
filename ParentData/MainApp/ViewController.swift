@@ -11,7 +11,8 @@ final class ViewController: UIViewController {
     
     // MARK: - private property
     
-    private var childrenCount = 0
+    private var personData = Human(name: nil, age: nil)
+    private var childrenData: [Human] = []
     
     private lazy var deleteAllButton: UIButton = {
         let button = UIButton()
@@ -106,10 +107,10 @@ private extension ViewController {
     }
     
     func addChildCell() {
-        if childrenCount != 5 {
-            childrenCount += 1
+        if childrenData.count != 5 {
+            childrenData.append(Human(name: nil, age: nil))
             
-            let lastIndexPath = IndexPath(row: childrenCount - 1, section: 1)
+            let lastIndexPath = IndexPath(row: childrenData.count - 1, section: 1)
             tableView.beginUpdates()
             tableView.insertRows(at: [lastIndexPath], with: .bottom)
             tableView.endUpdates()
@@ -135,8 +136,9 @@ private extension ViewController {
     }
     
     func deleteAllData(_ alert: UIAlertAction) {
-        childrenCount = 0
-        tableView.reloadSections([1], with: .none)
+        personData = Human(name: nil, age: nil)
+        childrenData.removeAll()
+        tableView.reloadData()
     }
 }
 
@@ -202,16 +204,27 @@ extension ViewController: UITableViewDataSource {
             return 1
         }
         
-        return childrenCount
+        return childrenData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DataCell.reuseIdentifier, for: indexPath) as? DataCell
         else { return UITableViewCell() }
+        
+        var data = Human(name: nil, age: nil)
         if indexPath.section == 0 {
-            cell.configurate(type: .person, index: indexPath.row)
+            data = personData
         } else {
-            cell.configurate(type: .child, index: indexPath.row)
+            data = childrenData[indexPath.row]
+        }
+        
+        let name = data.name ?? ""
+        let age = data.age == nil ? "" : "\(data.age ?? 0)"
+        
+        if indexPath.section == 0 {
+            cell.configurate(type: .person, index: indexPath.row, name: name, age: age)
+        } else {
+            cell.configurate(type: .child, index: indexPath.row, name: name, age: age)
         }
         cell.delegate = self
         
@@ -223,7 +236,7 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: DataCellDelegate {
     func didSelectDeleteButton(for index: Int) {
-        childrenCount -= 1
+        childrenData.remove(at: index)
         
         tableView.beginUpdates()
         tableView.deleteRows(at: [IndexPath(row: index, section: 1)], with: .right)
@@ -231,6 +244,20 @@ extension ViewController: DataCellDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             guard let self else { return }
             tableView.reloadSections([1], with: .none)
+        }
+    }
+    
+    func updateInfo(text: String, section: Int, index: Int, type: TypeTextField) {
+        if section == 0 {
+            switch type {
+            case .name: personData.name = text
+            case .age: personData.age = Int(text)
+            }
+        } else {
+            switch type {
+            case .name: childrenData[index].name = text
+            case .age: childrenData[index].age = Int(text)
+            }
         }
     }
 }

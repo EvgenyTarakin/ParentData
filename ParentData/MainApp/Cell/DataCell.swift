@@ -18,6 +18,7 @@ enum TypeCell {
 
 protocol DataCellDelegate: AnyObject {
     func didSelectDeleteButton(for index: Int)
+    func updateInfo(text: String, section: Int, index: Int, type: TypeTextField)
 }
 
 final class DataCell: UITableViewCell {
@@ -30,6 +31,7 @@ final class DataCell: UITableViewCell {
     
     // MARK: - private property
     
+    private var section = 0
     private var index = 0
     
     private lazy var mainStackView: UIStackView = {
@@ -56,6 +58,7 @@ final class DataCell: UITableViewCell {
     private lazy var nameTextField: TextField = {
         let textField = TextField()
         textField.configurate(type: .name)
+        textField.delegate = self
         
         return textField
     }()
@@ -63,6 +66,7 @@ final class DataCell: UITableViewCell {
     private lazy var ageTextField: TextField = {
         let textField = TextField()
         textField.configurate(type: .age)
+        textField.delegate = self
         
         return textField
     }()
@@ -114,11 +118,15 @@ final class DataCell: UITableViewCell {
 // MARK: - func
 
 extension DataCell {
-    func configurate(type: TypeCell, index: Int) {
+    func configurate(type: TypeCell, index: Int, name: String, age: String) {
         if type == .person {
             deleteBackView.isHidden = true
         }
+        section = type == .person ? 0 : 1
         self.index = index
+        
+        nameTextField.setValue(name)
+        ageTextField.setValue(age)
     }
 }
 
@@ -145,5 +153,16 @@ private extension DataCell {
 @objc private extension DataCell {
     func deleteCell() {
         delegate?.didSelectDeleteButton(for: index)
+    }
+}
+
+// MARK: - TextFieldDelegate
+
+extension DataCell: TextFieldDelegate {
+    func textFieldDidChange(type: TypeTextField, text: String) {
+        delegate?.updateInfo(text: text,
+                             section: section,
+                             index: index,
+                             type: type)
     }
 }
