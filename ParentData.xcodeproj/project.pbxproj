@@ -13,6 +13,8 @@
 		1B77BD422D63BA2F00F4D71B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B77BD412D63BA2F00F4D71B /* Assets.xcassets */; };
 		1B77BD452D63BA2F00F4D71B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B77BD432D63BA2F00F4D71B /* LaunchScreen.storyboard */; };
 		1B79D4322D63C10200C59053 /* DataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B79D4312D63C10200C59053 /* DataCell.swift */; };
+		1B846F842D646C3D008C31E6 /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B846F832D646C3D008C31E6 /* TextField.swift */; };
+		1B846F872D648559008C31E6 /* UITextField + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B846F862D648559008C31E6 /* UITextField + Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		1B77BD442D63BA2F00F4D71B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1B77BD462D63BA2F00F4D71B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1B79D4312D63C10200C59053 /* DataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCell.swift; sourceTree = "<group>"; };
+		1B846F832D646C3D008C31E6 /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
+		1B846F862D648559008C31E6 /* UITextField + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField + Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				1B77BD4F2D63BA8500F4D71B /* AppDelegate */,
+				1B846F822D646C1B008C31E6 /* CustomUI */,
+				1B846F852D648533008C31E6 /* Extensions */,
 				1B77BD512D63BAB100F4D71B /* StartApp */,
 				1B77BD502D63BAA400F4D71B /* MainApp */,
 				1B77BD412D63BA2F00F4D71B /* Assets.xcassets */,
@@ -97,6 +103,22 @@
 				1B79D4312D63C10200C59053 /* DataCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		1B846F822D646C1B008C31E6 /* CustomUI */ = {
+			isa = PBXGroup;
+			children = (
+				1B846F832D646C3D008C31E6 /* TextField.swift */,
+			);
+			path = CustomUI;
+			sourceTree = "<group>";
+		};
+		1B846F852D648533008C31E6 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1B846F862D648559008C31E6 /* UITextField + Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -175,7 +197,9 @@
 				1B77BD3D2D63BA2E00F4D71B /* ViewController.swift in Sources */,
 				1B77BD392D63BA2E00F4D71B /* AppDelegate.swift in Sources */,
 				1B77BD3B2D63BA2E00F4D71B /* SceneDelegate.swift in Sources */,
+				1B846F842D646C3D008C31E6 /* TextField.swift in Sources */,
 				1B79D4322D63C10200C59053 /* DataCell.swift in Sources */,
+				1B846F872D648559008C31E6 /* UITextField + Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
