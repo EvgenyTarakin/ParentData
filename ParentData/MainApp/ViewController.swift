@@ -11,10 +11,23 @@ final class ViewController: UIViewController {
     
     // MARK: - private property
     
+    private lazy var deleteAllButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 22
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.red.cgColor
+        button.setTitleColor(.red, for: .normal)
+        button.setTitle("Очистить", for: .normal)
+        button.setImage(UIImage(), for: .normal)
+        button.addTarget(self, action: #selector(tapDeleteAllButton), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .clear
-        tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.sectionHeaderTopPadding = 0
         tableView.register(DataCell.self, forCellReuseIdentifier: DataCell.reuseIdentifier)
@@ -40,11 +53,17 @@ private extension ViewController {
     func commonInit() {
         view.backgroundColor = .white
         
+        view.addSubview(deleteAllButton)
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
+            deleteAllButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            deleteAllButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            deleteAllButton.heightAnchor.constraint(equalToConstant: 44),
+            deleteAllButton.widthAnchor.constraint(equalToConstant: 200),
+            
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: deleteAllButton.topAnchor, constant: -8),
             tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor)
         ])
@@ -55,6 +74,10 @@ private extension ViewController {
 
 @objc private extension ViewController {
     func addChildCell() {
+        
+    }
+    
+    func tapDeleteAllButton() {
         
     }
 }
@@ -71,7 +94,7 @@ extension ViewController: UITableViewDelegate {
         titleLabel.font = .systemFont(ofSize: 20, weight: .medium)
         
         let headerButton = UIButton()
-        headerButton.layer.cornerRadius = 24
+        headerButton.layer.cornerRadius = 22
         headerButton.layer.borderWidth = 2
         headerButton.layer.borderColor = UIColor.tintColor.cgColor
         headerButton.setTitleColor(.tintColor, for: .normal)
@@ -96,11 +119,11 @@ extension ViewController: UITableViewDelegate {
         headerView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 4),
-            stackView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -4),
+            stackView.topAnchor.constraint(equalTo: headerView.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
             stackView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 16),
             stackView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -16),
-            stackView.heightAnchor.constraint(equalToConstant: 48),
+            stackView.heightAnchor.constraint(equalToConstant: 44),
             
             headerButton.widthAnchor.constraint(equalToConstant: 200)
         ])
@@ -117,14 +140,22 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if section == 0 {
+            return 1
+        }
+        
+        return 5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DataCell.reuseIdentifier, for: indexPath) as? DataCell
         else { return UITableViewCell() }
+        if indexPath.section == 0 {
+            cell.configurate(type: .person)
+        } else {
+            cell.configurate(type: .child)
+        }
         
         return cell
     }
 }
-
