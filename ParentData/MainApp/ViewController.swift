@@ -51,9 +51,63 @@ private extension ViewController {
     }
 }
 
+// MARK: - obj-c
+
+@objc private extension ViewController {
+    func addChildCell() {
+        
+    }
+}
+
 // MARK: - UITableViewDelegate
 
-extension ViewController: UITableViewDelegate { }
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .white
+        
+        let titleLabel = UILabel()
+        titleLabel.textColor = .black
+        titleLabel.font = .systemFont(ofSize: 20, weight: .medium)
+        
+        let headerButton = UIButton()
+        headerButton.layer.cornerRadius = 24
+        headerButton.layer.borderWidth = 2
+        headerButton.layer.borderColor = UIColor.tintColor.cgColor
+        headerButton.setTitleColor(.tintColor, for: .normal)
+        headerButton.setTitle(" Добавить ребенка", for: .normal)
+        headerButton.setImage(UIImage(systemName: "plus"), for: .normal)
+        headerButton.addTarget(self, action: #selector(addChildCell), for: .touchUpInside)
+        
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, headerButton])
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        if section == 0 {
+            titleLabel.text = "Персональные данные"
+            headerButton.isHidden = true
+        } else {
+            titleLabel.text = "Дети (макс. 5)"
+        }
+        
+        headerView.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 4),
+            stackView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -4),
+            stackView.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 16),
+            stackView.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -16),
+            stackView.heightAnchor.constraint(equalToConstant: 48),
+            
+            headerButton.widthAnchor.constraint(equalToConstant: 200)
+        ])
+        
+        return headerView
+    }
+}
 
 // MARK: - UITableViewDataSource
 
