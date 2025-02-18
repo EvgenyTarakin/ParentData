@@ -11,6 +11,8 @@ final class ViewController: UIViewController {
     
     // MARK: - private property
     
+    private var childrenCount = 0
+    
     private lazy var deleteAllButton: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 22
@@ -104,7 +106,19 @@ private extension ViewController {
     }
     
     func addChildCell() {
-        
+        if childrenCount != 5 {
+            childrenCount += 1
+            
+            let lastIndexPath = IndexPath(row: childrenCount - 1, section: 1)
+            tableView.beginUpdates()
+            tableView.insertRows(at: [lastIndexPath], with: .bottom)
+            tableView.endUpdates()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                guard let self else { return }
+                tableView.reloadSections([1], with: .none)
+                tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
+            }
+        }
     }
     
     func tapDeleteAllButton() {
@@ -121,7 +135,8 @@ private extension ViewController {
     }
     
     func deleteAllData(_ alert: UIAlertAction) {
-        
+        childrenCount = 0
+        tableView.reloadSections([1], with: .none)
     }
 }
 
@@ -187,7 +202,7 @@ extension ViewController: UITableViewDataSource {
             return 1
         }
         
-        return 5
+        return childrenCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -208,6 +223,14 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: DataCellDelegate {
     func didSelectDeleteButton(for index: Int) {
-           
+        childrenCount -= 1
+        
+        tableView.beginUpdates()
+        tableView.deleteRows(at: [IndexPath(row: index, section: 1)], with: .right)
+        tableView.endUpdates()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            guard let self else { return }
+            tableView.reloadSections([1], with: .none)
+        }
     }
 }
